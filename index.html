@@ -58,7 +58,7 @@ function csvToArray(str, delimiter = ",") {
 // Function to create a table row with clickable URLs
 function createTableRow(data) {
   return `<tr>
-    <td>${data['Tool Name']}</td>
+    <td>${data['ToolName']}</td>
     <td><a href="${data['OfficialWebsite']}" target="_blank">${data['OfficialWebsite']}</a></td>
     <td><a href="${data['GitRepository']}" target="_blank">${data['GitRepository']}</a></td>
     <td><a href="${data['ExampleRepository']}" target="_blank">${data['ExampleRepository']}</a></td>
