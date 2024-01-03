@@ -29,60 +29,38 @@ th {
 <h2>CSV to Table</h2>
 <table id="csvTable">
   <thead>
-    <tr>
-      <th>Tool Name</th>
-      <th>Official Website</th>
-      <th>Git Repository</th>
-      <th>Example Repository</th>
-    </tr>
+    <!-- Column names will be added here dynamically -->
   </thead>
   <tbody>
-    <!-- Table rows will be added here using JavaScript -->
+    <!-- Table rows will be dynamically added here -->
   </tbody>
 </table>
 
 <script>
-// Function to convert CSV text into an array of objects
-function csvToArray(str, delimiter = ",") {
-  const headers = str.slice(0, str.indexOf("\n")).split(delimiter);
-  const rows = str.slice(str.indexOf("\n") + 1).split("\n");
-  return rows.map(row => {
-    const values = row.split(delimiter);
-    return headers.reduce((object, header, index) => {
-      object[header] = values[index];
-      return object;
-    }, {});
-  });
-}
-
-// Function to create a table row with clickable URLs
-function createTableRow(data) {
-  return `<tr>
-    <td>${data['ToolName']}</td>
-    <td><a href="${data['OfficialWebsite']}" target="_blank">${data['OfficialWebsite']}</a></td>
-    <td><a href="${data['GitRepository']}" target="_blank">${data['GitRepository']}</a></td>
-    <td><a href="${data['ExampleRepository']}" target="_blank">${data['ExampleRepository']}</a></td>
-  </tr>`;
-}
-
-// Function to fetch CSV from URL and populate the table
+// Function to fetch CSV from URL, parse it, and update the table
 function fetchCsvAndPopulateTable(csvUrl) {
   fetch(csvUrl)
-    .then(response => {
-      if (response.ok) {
-        return response.text();
-      }
-      throw new Error('Network response was not ok.');
-    })
+    .then(response => response.text())
     .then(csvText => {
-      const dataArray = csvToArray(csvText);
-      const tableBody = document.getElementById('csvTable').getElementsByTagName('tbody')[0];
-      dataArray.forEach(item => {
-        tableBody.innerHTML += createTableRow(item);
+      // Split CSV text by lines
+      const lines = csvText.trim().split(/\r?\n/);
+
+      // Extract headers
+      const headers = lines.shift().split(',');
+
+      // Generate the table header
+      const theadHtml = headers.map(header => `<th>${header.trim()}</th>`).join('');
+      document.getElementById('csvTable').querySelector('thead').innerHTML = `<tr>${theadHtml}</tr>`;
+
+      // Populate the table body
+      const tbody = document.getElementById('csvTable').querySelector('tbody');
+      lines.forEach(line => {
+        const rowHtml = line.split(',').map(cell => `<td>${cell.trim()}</td>`).join('');
+        tbody.innerHTML += `<tr>${rowHtml}</tr>`;
       });
     })
     .catch(error => {
-      console.error('There has been a problem with your fetch operation:', error);
+      console.error('Error fetching the CSV file:', error);
     });
 }
 
