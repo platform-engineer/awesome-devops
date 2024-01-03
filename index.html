@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CSV to HTML Table</title>
+<title>CSV to HTML Table with Clickable Links</title>
 <style>
 table {
   width: 100%;
@@ -26,7 +26,7 @@ th {
 </head>
 <body>
 
-<h2>CSV to Table</h2>
+<h2>CSV to HTML Table with Clickable Links</h2>
 <table id="csvTable">
   <thead>
     <!-- Column names will be added here dynamically -->
@@ -42,11 +42,12 @@ function fetchCsvAndPopulateTable(csvUrl) {
   fetch(csvUrl)
     .then(response => response.text())
     .then(csvText => {
-      // Split CSV text by lines
-      const lines = csvText.trim().split(/\r?\n/);
+      // Split CSV text by lines and filter out empty lines
+      const lines = csvText.trim().split(/\r?\n/).filter(line => line.trim());
 
       // Extract headers
       const headers = lines.shift().split(',');
+      const numColumns = headers.length;
 
       // Generate the table header
       const theadHtml = headers.map(header => `<th>${header.trim()}</th>`).join('');
@@ -55,13 +56,30 @@ function fetchCsvAndPopulateTable(csvUrl) {
       // Populate the table body
       const tbody = document.getElementById('csvTable').querySelector('tbody');
       lines.forEach(line => {
-        const rowHtml = line.split(',').map(cell => `<td>${cell.trim()}</td>`).join('');
-        tbody.innerHTML += `<tr>${rowHtml}</tr>`;
+        const cells = line.split(',');
+        // Add the row only if it has the same number of columns as headers
+        if (cells.length === numColumns) {
+          const rowHtml = cells.map(cell => {
+            const cellTrimmed = cell.trim();
+            return isUrl(cellTrimmed) ? `<td><a href="${cellTrimmed}" target="_blank">${cellTrimmed}</a></td>` : `<td>${cellTrimmed}</td>`;
+          }).join('');
+          tbody.innerHTML += `<tr>${rowHtml}</tr>`;
+        }
       });
     })
     .catch(error => {
       console.error('Error fetching the CSV file:', error);
     });
+}
+
+// Utility function to check if a string is a URL
+function isUrl(string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 // Specify the CSV file URL here
