@@ -1,0 +1,10 @@
+ToolName,OfficialWebsite,GitRepository,ExampleRepository
+Terraform,https://www.terraform.io/,https://github.com/hashicorp/terraform,https://github.com/hashicorp/terraform-guides
+Ansible,https://www.ansible.com/,https://github.com/ansible/ansible,https://github.com/ansible/ansible-examples
+Puppet,https://puppet.com/,https://github.com/puppetlabs/puppet,https://github.com/puppetlabs/puppetlabs-stdlib
+Chef,https://www.chef.io/,https://github.com/chef/chef,https://github.com/chef-cookbooks
+Pulumi,https://www.pulumi.com/,https://github.com/pulumi/pulumi,https://github.com/pulumi/examples
+CloudFormation,https://aws.amazon.com/cloudformation/,NA,https://github.com/awslabs/aws-cloudformation-templates
+Azure Resource Manager (ARM),https://azure.microsoft.com/en-us/features/resource-manager/,NA,https://github.com/Azure/azure-quickstart-templates
+Google Cloud Deployment Manager,https://cloud.google.com/deployment-manager,NA,https://github.com/GoogleCloudPlatform/deploymentmanager-samples
+SaltStack (Salt),https://www.saltstack.com/,https://github.com/saltstack/salt,https://github.com/saltstack/salt-bootstrap
