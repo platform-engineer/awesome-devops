@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV to HTML Table</title>
+<style>
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+</style>
+</head>
+<body>
+
+<h2>CSV to Table</h2>
+<table id="csvTable">
+  <thead>
+    <tr>
+      <th>Tool Name</th>
+      <th>Official Website</th>
+      <th>Git Repository</th>
+      <th>Example Repository</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Table rows will be added here using JavaScript -->
+  </tbody>
+</table>
+
+<script>
+// Function to convert CSV text into an array of objects
+function csvToArray(str, delimiter = ",") {
+  const headers = str.slice(0, str.indexOf("\n")).split(delimiter);
+  const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+  return rows.map(row => {
+    const values = row.split(delimiter);
+    return headers.reduce((object, header, index) => {
+      object[header] = values[index];
+      return object;
+    }, {});
+  });
+}
+
+// Function to create a table row with clickable URLs
+function createTableRow(data) {
+  return `<tr>
+    <td>${data['Tool Name']}</td>
+    <td><a href="${data['OfficialWebsite']}" target="_blank">${data['OfficialWebsite']}</a></td>
+    <td><a href="${data['GitRepository']}" target="_blank">${data['GitRepository']}</a></td>
+    <td><a href="${data['ExampleRepository']}" target="_blank">${data['ExampleRepository']}</a></td>
+  </tr>`;
+}
+
+// Function to fetch CSV from URL and populate the table
+function fetchCsvAndPopulateTable(csvUrl) {
+  fetch(csvUrl)
+    .then(response => {
+      if (response.ok) {
+        return response.text();
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then(csvText => {
+      const dataArray = csvToArray(csvText);
+      const tableBody = document.getElementById('csvTable').getElementsByTagName('tbody')[0];
+      dataArray.forEach(item => {
+        tableBody.innerHTML += createTableRow(item);
+      });
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
+}
+
+// Specify the CSV file URL here
+const csvUrl = 'csv/iac.csv';
+
+// Call the function to fetch the CSV data and populate the table
+fetchCsvAndPopulateTable(csvUrl);
+</script>
+
+</body>
+</html>
